@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8" />
+      <title>Currency Exchange</title>
+      <link rel="icon" href="data:;base64,=">
+   </head>
+   <body>
+
+   <div class="container" style="display: flex; flex-flow: row;">
+          <div class="container" style="width: 40%;">
+                <div style="display: flex; justify-content: center; flex-flow: column;">
+                    <div style="display: flex; justify-content: start; flex-flow: row wrap;" >
+                        {% for user in users %}
+                            {{user.handle}} : {{user.rank}}
+                        {% endfor %}
+                    </div>
+                </div>
+          </div>
+    </div>
+   </body>
+</html>

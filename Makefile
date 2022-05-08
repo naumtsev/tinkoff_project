@@ -2,6 +2,7 @@ TESTS = tests
 
 VENV ?= .venv
 CODE = tests app
+PORT = 8000
 
 .PHONY: help
 help: ## Show this help
@@ -35,3 +36,8 @@ format: ## Formats all files
 
 .PHONY: ci
 ci:	lint test ## Lint code then run tests
+
+
+.PHONY: up
+up: ## Run application
+	FLASK_APP=./app/app.py  $(VENV)/bin/flask run  --host='0.0.0.0' -p $(PORT) --reload
