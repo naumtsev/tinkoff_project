@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Problemset {{problemset.id}}</title>
+      <style type="text/css">
+       a {
+        text-decoration: none;
+       }
+       a:hover {
+        text-decoration: underline;
+       }
+
+       .padded {
+           padding: 10px;
+       }
+  </style>
+</head>
+<body>
+        <b>{{ problemset.title }}</b>
+        <br/>
+        {% if problemset.description %}
+            <div style="width: 500px;">
+            {{ problemset.description }}
+            </div>
+            <br/>
+        {% endif %}
+
+         <table border="1">
+             <tr>
+                    <th> <a class="padded">  </a> </th>
+                      <th> <a class="padded"> SOLVED </a> </th>
+                    {% for problem in problemset.problems %}
+                        <th>
+                            <center>
+                                <div  class="padded">
+                                    <a href="https://codeforces.com/problemset/problem/{{problem.contest_id}}/{{problem.problem_index}}" style="color:black;"> {{problem.contest_id}}{{problem.problem_index}}</a>
+                                </div >
+                            </center>
+                        </th>
+                    {% endfor %}
+                      <th></th>
+             </tr>
+
+               {% for user_row in users_rows %}
+                  <tr>
+                     <th>
+                         <a class="padded" href="https://codeforces.com/profile/{{user_row.handle}}" style="color: {{user_row.handle_color}};">{{user_row.handle}} </a>
+                     </th>
+
+                      <th>  <center> <label  class="solved"> {{user_row.count_solved_problems}} </label > </center></th>
+                        {% for sub in user_row.problem_list %}
+                          {% if sub %}
+                               <th><center> <label class="padded"> <a href="https://codeforces.com/contest/{{sub.contest_id}}/submission/{{sub.cf_id}}" style="color:#09ab3f;"> + </a> </label></center></th>
+                          {% else %}
+                               <th><center> <label class="padded" >  </label> </center></th>
+
+                          {% endif %}
+                        {% endfor %}
+                     <th></th>
+                  </tr>
+                {% endfor %}
+
+     </table>
+</body>
+</html>

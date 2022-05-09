@@ -6,7 +6,7 @@ import sqlalchemy.orm as so
 from sqlalchemy import and_, or_
 
 from app import codeforces_api, config
-from app.models import Base, Problem, User, UserType
+from app.models import Base, Problem, Problemset, Rank, User, UserType
 
 
 class DB:
@@ -33,7 +33,11 @@ class DB:
 
     def add_user(self, handle: str, user_type: UserType = UserType.PARTICIPANT):
         with self.create_session() as session:
-            session.merge(User(handle=handle, user_type=user_type))
+            user = session.query(User).filter(User.handle == handle).one_or_none()
+            if user is None:
+                session.add(
+                    User(handle=handle, user_type=user_type, rank=Rank.NOT_RANKED)
+                )
 
     def add_problemset(
         self,
@@ -42,9 +46,13 @@ class DB:
         problems: typing.List[typing.Tuple[str, str]],
         image_base64: str,
     ):
-        invalid_problems = []
+        valid_problems = []
 
         with self.create_session() as session:
+            problem_set = Problemset(
+                title=title, description=description, image=image_base64
+            )
+            session.add(problem_set)
             for (contest_id, problem_index) in problems:
                 q = session.query(Problem).filter(
                     and_(
@@ -59,19 +67,18 @@ class DB:
                     self.add_problems_from_contest(contest_id, session)
 
                 problem = q.one_or_none()
-                if problem is None:
-                    invalid_problems.append((contest_id, problem_index))
-
-        return invalid_problems
+                if problem is not None:
+                    valid_problems.append((contest_id, problem_index))
+                    problem_set.problems.append(problem)
+        return valid_problems
 
     def add_problems_from_contest(self, contest_id, session):
         problems = codeforces_api.get_contest_problems(contest_id)
-        print(problems)
         for problem in problems:
             title = problem['name']
             contest_id = problem['contestId']
             problem_index = problem['index']
-            rating = problem['rating']
+            rating = problem.get('rating', 0)
 
             problem = (
                 session.query(Problem)

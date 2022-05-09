@@ -18,7 +18,7 @@ def get_users_info(handles: typing.List[str]):
 def get_user_submissions(handle: str):
     req_url = config.CODEFORCES_API_URL.format('user.status') + f'?handle={handle}'
     try:
-        return requests.get(req_url).json()
+        return requests.get(req_url).json()['result']
     except BaseException:
         return []
 

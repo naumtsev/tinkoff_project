@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Problemsets</title>
+  <link rel="icon" href="data:;base64,=">
+</head>
+<body>
+         <div class="container" style="display: flex; flex-flow: row;">
+          <div class="container" style="width: 40%;">
+                <div style="display: flex; justify-content: row; flex-flow: column;">
+                    <span style="font-size: 20px;"><b>Контесты:</b></span>
+                    {% for problemset in problemsets%}
+                    <div style="border: 1px solid black; margin-top: 6px;">
+                        <div style="padding: 6px;">
+                            <div style="display: flex; justify-content: row; flex-flow: row;">
+                                <div class="problemset-image" style="display: inline;">
+                                     <img src="data:image/png;base64, {{problemset.image}}" width="100" height="100" style="border-radius: 15%;"/>
+                                </div>
+                                <div class="problemset-description" style="margin-left: 10px; display: inline;" >
+                                    <b>{{ problemset.title }}</b>
+                                    <br/>
+                                    {% if problemset.description %}
+                                        {{ problemset.description }}
+                                        <br/>
+                                    {% endif %}
+                                    <a href="/problemset/{{problemset.id}}">standings</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                </div>
+          </div>
+    </div>
+</body>
+</html>

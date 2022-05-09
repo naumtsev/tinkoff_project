@@ -14,7 +14,7 @@ class Verdict(enum.Enum):
 class Submission(Base):
     __tablename__ = 'submissions'
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
-
+    cf_id = sa.Column(sa.Integer, unique=True, nullable=False)
     author_handle = sa.Column(sa.String, sa.ForeignKey('users.handle'))
     author = so.relationship('User', back_populates='submissions', uselist=False)
 

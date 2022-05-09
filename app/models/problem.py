@@ -16,5 +16,3 @@ class Problem(Base):
     problemsets = so.relationship(
         'Problemset', secondary='problemlinks', back_populates='problems'
     )
-
-    sa.CheckConstraint(contest_id, problem_index)

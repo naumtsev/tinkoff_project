@@ -3,4 +3,4 @@ from .problem import Problem  # noqa
 from .problemlink import Problemlink  # noqa
 from .problemset import Problemset  # noqa
 from .submission import Submission, Verdict  # noqa
-from .user import Rank, User, UserType  # noqa
+from .user import Rank, User, UserType, get_rank_color  # noqa
