@@ -9,6 +9,12 @@ from app.db import db
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config.SECRET_KEY
 
+submission_updater = workers.UsersSubmissionsUpdater(db)
+info_updater = workers.UsersInfoUpdater(db)
+
+submission_updater.start()
+info_updater.start()
+
 
 @app.route('/', methods=['GET'])
 def index() -> typing.Any:
@@ -123,13 +129,13 @@ def problemset_get(problemset_id):
         )
 
 
-@app.route('/update_submissions', methods=['GET'])
+@app.route('/update_users_submissions', methods=['GET'])
 def update_subs() -> typing.Any:
-    workers.update_users_submissions()
-    return 'OK'
+    workers.UsersSubmissionsUpdater().update_users_submissions()
+    return
 
 
-@app.route('/update_users', methods=['GET'])
+@app.route('/update_users_info', methods=['GET'])
 def update_users_info() -> typing.Any:
-    workers.update_users_info()
+    workers.UsersInfoUpdater().update_users_info()
     return 'OK'

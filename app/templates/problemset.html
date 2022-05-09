@@ -48,7 +48,7 @@
                          <a class="padded" href="https://codeforces.com/profile/{{user_row.handle}}" style="color: {{user_row.handle_color}};">{{user_row.handle}} </a>
                      </th>
 
-                      <th>  <center> <label  class="solved"> {{user_row.count_solved_problems}} </label > </center></th>
+                      <th>  <center> <label  class="padded"> {{user_row.count_solved_problems}} </label > </center></th>
                         {% for sub in user_row.problem_list %}
                           {% if sub %}
                                <th><center> <label class="padded"> <a href="https://codeforces.com/contest/{{sub.contest_id}}/submission/{{sub.cf_id}}" style="color:#09ab3f;"> + </a> </label></center></th>
