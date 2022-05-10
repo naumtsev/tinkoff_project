@@ -7,7 +7,7 @@ from app import codeforces_api, config, models
 from app.db import db
 
 
-def update_users_info():
+def update_users_info() -> None:
     with db.create_session() as session:
         users = session.query(models.User).all()
         handles = []
@@ -23,7 +23,7 @@ def update_users_info():
             d_users[handle].rank = models.Rank.from_str(rank)
 
 
-def _update_user_submissions(handle: str):
+def _update_user_submissions(handle: str) -> None:
     with db.create_session() as session:
         user = (
             session.query(models.User)
@@ -62,7 +62,7 @@ def _update_user_submissions(handle: str):
                 )
 
 
-def update_users_submissions():
+def update_users_submissions() -> None:
     executors = ThreadPoolExecutor(max_workers=3)
     handles = []
     with db.create_session() as session:

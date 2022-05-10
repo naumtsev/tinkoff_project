@@ -1,4 +1,7 @@
-def parse_problems(problems_str):
+import typing
+
+
+def parse_problems(problems_str: str) -> typing.List[typing.Tuple[str, str]]:
     problems = []
     taked_problems = {}
 

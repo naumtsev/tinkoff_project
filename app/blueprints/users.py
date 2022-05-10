@@ -31,7 +31,7 @@ def users_get() -> typing.Any:
 
 
 @users_blueprint.route('/change_user_type/<handle>', methods=['POST'])
-def change_user_type_post(handle) -> typing.Any:
+def change_user_type_post(handle: str) -> typing.Any:
     with db.create_session() as db_session:
         user = db.get_user_by_handle(handle, db_session)
 

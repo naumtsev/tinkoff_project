@@ -7,7 +7,7 @@ from app import config
 params = {'lang': 'en'}
 
 
-def get_users_info(handles: typing.List[str]):
+def get_users_info(handles: typing.List[str]) -> typing.List[typing.Any]:
     args = '?handles=' + ';'.join(handles)
     req_url = config.CODEFORCES_API_URL.format('user.info') + args
 
@@ -17,7 +17,7 @@ def get_users_info(handles: typing.List[str]):
         return []
 
 
-def get_user_submissions(handle: str):
+def get_user_submissions(handle: str) -> typing.List[typing.Any]:
     args = f'?handle={handle}'
 
     req_url = config.CODEFORCES_API_URL.format('user.status') + args
@@ -27,7 +27,7 @@ def get_user_submissions(handle: str):
         return []
 
 
-def get_contest_problems(contest_id: str):
+def get_contest_problems(contest_id: str) -> typing.List[typing.Any]:
     args = f'?contestId={contest_id}&from=1&count=1'
     req_url = config.CODEFORCES_API_URL.format('contest.standings') + args
     try:

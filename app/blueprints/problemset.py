@@ -10,7 +10,7 @@ problemset_blueprint = Blueprint('problemset', __name__)
 
 
 class ProblemsetForm:
-    def __init__(self):
+    def __init__(self) -> None:
         self.id = ''
         self.title = ''
         self.description = ''
@@ -19,7 +19,9 @@ class ProblemsetForm:
 
 @problemset_blueprint.route('/problemset', methods=['GET'])
 @problemset_blueprint.route('/problemset/<int:problemset_id>', methods=['GET'])
-def create_or_update_problemset_get(problemset_id: int = None):
+def create_or_update_problemset_get(
+    problemset_id: typing.Optional[int] = None,
+) -> typing.Any:
     form = ProblemsetForm()
 
     if problemset_id is not None:
@@ -49,29 +51,32 @@ def create_or_update_problemset_get(problemset_id: int = None):
 
 @problemset_blueprint.route('/problemset', methods=['POST'])
 @problemset_blueprint.route('/problemset/<int:problemset_id>', methods=['POST'])
-def create_or_update_problemset_post(problemset_id: int = None):
+def create_or_update_problemset_post(
+    problemset_id: typing.Optional[int] = None,
+) -> typing.Any:
     title = request.form.get('title', '')
     description = request.form.get('description', '')
     problems = utils.parse_problems(request.form.get('problems', ''))
 
-    problemset = models.Problemset(title=title, description=description)
+    problemset: models.Problemset = models.Problemset(
+        title=title, description=description
+    )
 
     with db.create_session() as db_session:
-
         if problemset_id is None:
             status_word = 'created'
             image = request.files['image']
             image_base64 = str(base64.b64encode(image.stream.read()).decode())
             problemset.image = image_base64
         else:
-            problemset = db.get_problemset(problemset_id, db_session)
+            problemset_or_none = db.get_problemset(problemset_id, db_session)
 
-            if problemset is None:
+            if problemset_or_none is None:
                 session[
                     'message'
                 ] = f'Problemset with id "{problemset_id}" does not exist'
                 return redirect('/')
-
+            problemset = problemset_or_none
             status_word = 'updated'
             problemset.title = title
             problemset.description = description
@@ -100,7 +105,7 @@ class StandingsRow:
 @problemset_blueprint.route(
     '/problemset/<int:problemset_id>/standings', methods=['GET']
 )
-def problemset_get(problemset_id):
+def problemset_get(problemset_id: int) -> typing.Any:
     with db.create_session() as db_session:
         problemset = db.get_problemset(problemset_id, db_session)
 

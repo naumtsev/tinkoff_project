@@ -18,6 +18,7 @@ Pillow = "^9.1.0"
 APScheduler = "^3.9.1"
 Flask-Cache = "^0.13.1"
 uvicorn = "^0.17.6"
+types-requests = "^2.27.25"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0"

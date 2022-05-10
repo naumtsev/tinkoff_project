@@ -1,4 +1,5 @@
 import enum
+import typing
 
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -20,13 +21,13 @@ class Rank(enum.Enum):
     LEGENDARY_GRANDMASTER = 10
 
     @staticmethod
-    def from_str(rank: str):
+    def from_str(rank: str) -> typing.Any:
         if rank not in _ranks:
             return Rank.NOT_RANKED
         return _ranks[rank]
 
 
-def get_rank_color(rank: Rank):
+def get_rank_color(rank: Rank) -> str:
     return _ranks_color[rank]
 
 

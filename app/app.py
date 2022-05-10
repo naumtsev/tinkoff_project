@@ -28,6 +28,6 @@ def index() -> typing.Any:
 
 
 @app.errorhandler(404)
-def page_not_found(_):
+def page_not_found(_: typing.Any) -> typing.Any:
     session['message'] = '404 Page Not Found'
     return redirect('/')

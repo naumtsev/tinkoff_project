@@ -27,14 +27,20 @@ class DB:
         finally:
             session.close()
 
-    def get_users(self, allowed_user_types: typing.List[UserType], session: typing.Any):
+    def get_users(
+        self, allowed_user_types: typing.List[UserType], session: typing.Any
+    ) -> typing.List[User]:
         criteries = [User.user_type == user_type for user_type in allowed_user_types]
         return session.query(User).filter(or_(*criteries)).all()
 
-    def get_user_by_handle(self, handle: str, session: typing.Any):
+    def get_user_by_handle(
+        self, handle: str, session: typing.Any
+    ) -> typing.Optional[User]:
         return session.query(User).filter(User.handle == handle).one_or_none()
 
-    def get_problemset(self, problemset_id, session):
+    def get_problemset(
+        self, problemset_id: int, session: typing.Any
+    ) -> typing.Optional[Problemset]:
         problemset = (
             session.query(Problemset)
             .filter(Problemset.id == problemset_id)
@@ -42,7 +48,7 @@ class DB:
         )
         return problemset
 
-    def add_user(self, handle: str, user_type: UserType = UserType.PARTICIPANT):
+    def add_user(self, handle: str, user_type: UserType = UserType.PARTICIPANT) -> bool:
         with self.create_session() as session:
             user = session.query(User).filter(User.handle == handle).one_or_none()
             if user is None:
@@ -55,14 +61,16 @@ class DB:
                 return True
             return True
 
-    def add_or_update_problemset(self, problemset, problems, session):
+    def add_or_update_problemset(
+        self,
+        problemset: Problemset,
+        problems: typing.List[typing.Tuple[str, str]],
+        session: typing.Any,
+    ) -> typing.List[typing.Tuple[str, str]]:
         valid_problems = []
+
         session.add(problemset)
         session.commit()
-
-        problemset = (
-            session.query(Problemset).filter(Problemset.id == problemset.id).one()
-        )
 
         for (contest_id, problem_index) in problems:
             q = session.query(Problem).filter(
@@ -83,7 +91,7 @@ class DB:
                 problemset.problems.append(problem)
         return valid_problems
 
-    def add_problems_from_contest(self, contest_id, session):
+    def add_problems_from_contest(self, contest_id: str, session: typing.Any) -> None:
         problems = codeforces_api.get_contest_problems(contest_id)
         for problem in problems:
             title = problem['name']
