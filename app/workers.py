@@ -23,7 +23,7 @@ def update_users_info() -> None:
             d_users[handle].rank = models.Rank.from_str(rank)
 
 
-def _update_user_submissions(handle: str) -> None:
+def update_user_submissions(handle: str) -> None:
     with db.create_session() as session:
         user = (
             session.query(models.User)
@@ -75,7 +75,7 @@ def update_users_submissions() -> None:
             handles.append(user.handle)
 
     for handle in handles:
-        executors.submit(_update_user_submissions, handle)
+        executors.submit(update_user_submissions, handle)
 
 
 workers_scheduler: BackgroundScheduler = BackgroundScheduler()

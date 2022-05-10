@@ -18,6 +18,7 @@ Pillow = "^9.1.0"
 APScheduler = "^3.9.1"
 Flask-Cache = "^0.13.1"
 types-requests = "^2.27.25"
+requests-mock = "^1.9.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0"

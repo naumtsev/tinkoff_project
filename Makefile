@@ -18,7 +18,7 @@ venv:
 
 .PHONY: test
 test: ## Runs pytest
-	poetry run pytest -v tests
+	DB_URL=sqlite:///test.db poetry run pytest -v tests
 
 .PHONY: lint
 lint: ## Lint code
