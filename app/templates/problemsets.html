@@ -14,11 +14,10 @@
           margin-left:5px;
       }
     </style>
-
 </head>
 <body>
     {% if message %}
-        <div style="background-color: #FF6B7B; margin-bottom: 5px;">
+        <div style="background-color: #FFED73; margin-bottom: 5px;">
                 <center>
                     {{ message }}
                 </center>
@@ -30,25 +29,25 @@
                 <div style="display: flex; justify-content: row; flex-flow: column;">
                     <span style="font-size: 20px;"><b>Problemsets:</b></span>
                     {% for problemset in problemsets%}
-                    <div style="border: 1px solid black; margin-top: 6px;">
-                        <div style="padding: 6px;">
-                            <div style="display: flex; justify-content: row; flex-flow: row;">
-                                <div class="problemset-image" style="display: inline-block;">
-                                     <img src="data:image/png;base64, {{problemset.image}}" width="100" height="100" style="border-radius: 15%;"/>
-                                </div>
-                                <div class="problemset-description" style="margin-left: 10px; display: inline;" >
-                                    <b>{{ problemset.title }}</b>
-                                    <a class="mybutton" href="/problemset/{{problemset.id}}">Edit</a>
-                                    <br/>
-                                    {% if problemset.description %}
-                                        {{ problemset.description }}
+                        <div style="border: 1px solid black; margin-top: 6px;">
+                            <div style="padding: 6px;">
+                                <div style="display: flex; justify-content: row; flex-flow: row;">
+                                    <div class="problemset-image" style="display: inline-block;">
+                                         <img src="data:image/png;base64, {{problemset.image}}" width="100" height="100" style="border-radius: 5%; border:1px solid #000000;"/>
+                                    </div>
+                                    <div class="problemset-description" style="margin-left: 10px; display: inline;" >
+                                        <b>{{ problemset.title }}</b>
+                                        <a class="mybutton" href="/problemset/{{problemset.id}}">Edit</a>
                                         <br/>
-                                    {% endif %}
-                                    <a href="/problemset/{{problemset.id}}/standings">standings</a>
+                                        {% if problemset.description %}
+                                            {{ problemset.description }}
+                                            <br/>
+                                        {% endif %}
+                                        <a href="/problemset/{{problemset.id}}/standings">standings</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     {% endfor %}
                 </div>
           </div>
@@ -62,7 +61,6 @@
                 <a href="/update_users_info">Update users info</a>
             </div>
           </div>
-
     </div>
 </body>
 </html>

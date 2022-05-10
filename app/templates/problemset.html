@@ -7,6 +7,7 @@
        a {
         text-decoration: none;
        }
+
        a:hover {
         text-decoration: underline;
        }
@@ -15,26 +16,23 @@
            padding: 10px;
        }
 
-
        table {
            border: 1px solid grey;
-        }
-        th {
-           border: 1px solid grey;
-        }
-        td {
-           border: 1px solid grey;
-        }
+       }
 
+       th {
+           border: 1px solid grey;
+       }
+
+       td {
+           border: 1px solid grey;
+       }
   </style>
 </head>
 <body>
         <a href="/">< BACK</a>
         <br/>
         <br/>
-
-        <b>{{ problemset.title }}</b>
-
         <b>{{ problemset.title }}</b>
         <br/>
         {% if problemset.description %}
@@ -46,37 +44,56 @@
 
          <table >
              <tr>
-                    <th> <a class="padded">  </a> </th>
-                      <th> <a class="padded"> SOLVED </a> </th>
-                    {% for problem in problemset.problems %}
-                        <th>
-                            <center>
-                                <div  class="padded">
-                                    <a href="https://codeforces.com/problemset/problem/{{problem.contest_id}}/{{problem.problem_index}}" style="color:black;"> {{problem.contest_id}}{{problem.problem_index}}</a>
-                                </div >
-                            </center>
-                        </th>
-                    {% endfor %}
+                <th>
+                    <a class="padded">  </a>
+                </th>
+
+                 <th>
+                     <a class="padded"> SOLVED </a>
+                 </th>
+
+                {% for problem in problemset.problems %}
+                    <th>
+                        <center>
+                            <div  class="padded">
+                                <a href="https://codeforces.com/problemset/problem/{{problem.contest_id}}/{{problem.problem_index}}" style="color:black;"> {{problem.contest_id}}{{problem.problem_index}}</a>
+                            </div >
+                        </center>
+                    </th>
+                {% endfor %}
              </tr>
 
-               {% for user_row in users_rows %}
-                  <tr>
+             {% for user_row in users_rows %}
+                <tr>
                      <th>
                          <a class="padded" href="https://codeforces.com/profile/{{user_row.handle}}" style="color: {{user_row.handle_color}};">{{user_row.handle}} </a>
                      </th>
 
-                      <th>  <center> <label  class="padded"> {{user_row.count_solved_problems}} </label > </center></th>
-                        {% for sub in user_row.problem_list %}
-                          {% if sub %}
-                               <th><center> <label class="padded"> <a href="https://codeforces.com/contest/{{sub.contest_id}}/submission/{{sub.cf_id}}" style="color:#09ab3f;"> + </a> </label></center></th>
-                          {% else %}
-                               <th><center> <label class="padded" >  </label> </center></th>
+                      <th>
+                          <center>
+                              <label  class="padded"> {{user_row.count_solved_problems}} </label >
+                          </center>
+                      </th>
 
-                          {% endif %}
-                        {% endfor %}
+                    {% for sub in user_row.problem_list %}
+                      {% if sub %}
+                           <th>
+                               <center>
+                                   <label class="padded">
+                                       <a href="https://codeforces.com/contest/{{sub.contest_id}}/submission/{{sub.cf_id}}" style="color:#09ab3f;"> + </a>
+                                   </label>
+                               </center>
+                           </th>
+                     {% else %}
+                        <th>
+                            <center>
+                                <label class="padded" >  </label>
+                            </center>
+                        </th>
+                      {% endif %}
+                    {% endfor %}
                   </tr>
                 {% endfor %}
-
      </table>
 </body>
 </html>

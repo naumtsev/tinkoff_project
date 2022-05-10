@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Problemset</title>
+    <title>Create or update problemset</title>
   <link rel="icon" href="data:;base64,=">
 </head>
 <body>
@@ -10,7 +10,7 @@
     <br/>
     <br/>
       <div class="container" style="display: flex; flex-flow: row;">
-          <div class="container" style="width: 25%;">
+          <div class="container" style="min-width: 25%;">
                 <div style="display: flex; justify-content: center; flex-flow: column;">
                     <div style="border: 1px solid black;"  >
                        <form method='POST' action='/problemset{{"/" + form.id if form.id}}' style="padding: 5px;" enctype="multipart/form-data">

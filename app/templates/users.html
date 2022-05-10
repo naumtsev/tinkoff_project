@@ -1,59 +1,58 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <meta charset="utf-8" />
-      <title>Users</title>
-      <link rel="icon" href="data:;base64,=">
-
+       <meta charset="utf-8" />
+       <title>Users</title>
+       <link rel="icon" href="data:;base64,=">
        <style>
-       a {
-        text-decoration: none;
-       }
-       a:hover {
-        text-decoration: underline;
-       }
+           a {
+            text-decoration: none;
+           }
 
-        th {
-           border: 1px solid grey;
-           padding: 5px;
-        }
-        td {
-           border: 1px solid grey;
-        }
+           a:hover {
+            text-decoration: underline;
+           }
+
+            th {
+               border: 1px solid grey;
+               padding: 5px;
+            }
+
+            td {
+               border: 1px solid grey;
+            }
        </style>
    </head>
    <body>
    <a href="/">< BACK</a>
    <br/>
    <br/>
-    <div class="container" style="display: flex; flex-flow: row;">
+   <div class="container" style="display: flex; flex-flow: row;">
           <div class="container" style="width: 40%;">
                     <b>Add new user:</b>
                     <form method='POST' action='/add-user'>
-                           <input type="text" value="" name="handle" placeholder="handle"/>
+                           <input type="text" value="" name="handle" placeholder="handle" required/>
                            <button type="submit"> Add </button>
-                     </form>
+                    </form>
                     <br/>
                     <b> Users:</b>
                     <br/>
                     <table>
                         {% for user in users %}
-                        <tr>
-                            <th>
-                                <a href="https://codeforces.com/profile/{{user.handle}}" style="color: {{user.handle_color}};">{{user.handle}} </a>
-                            </th>
-                            <th>
-                                <form method='POST' action='/change_user_type/{{user.handle}}'>
-                                    <select name="user_type">
-                                      <option value="{{UserType.PARTICIPANT.value}}" {{"selected" if user.user_type == UserType.PARTICIPANT}}>PARTICIPANT</option>
-                                      <option value="{{UserType.SPECTATOR.value}}" {{"selected" if user.user_type == UserType.SPECTATOR}}>SPECTATOR</option>
-                                    </select>
-
-                                   <button type="submit"> Save </button>
-                                 </form>
-                            </th>
-                        </tr>
-
+                            <tr>
+                                <th>
+                                    <a href="https://codeforces.com/profile/{{user.handle}}" style="color: {{user.handle_color}};">{{user.handle}} </a>
+                                </th>
+                                <th>
+                                    <form method='POST' action='/change_user_type/{{user.handle}}'>
+                                        <select name="user_type">
+                                          <option value="{{UserType.PARTICIPANT.value}}" {{"selected" if user.user_type == UserType.PARTICIPANT}}>PARTICIPANT</option>
+                                          <option value="{{UserType.SPECTATOR.value}}" {{"selected" if user.user_type == UserType.SPECTATOR}}>SPECTATOR</option>
+                                        </select>
+                                       <button type="submit"> Save </button>
+                                     </form>
+                                </th>
+                            </tr>
                         {% endfor %}
                 </table>
           </div>

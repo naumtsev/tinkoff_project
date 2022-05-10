@@ -35,21 +35,22 @@ class DB:
         with self.create_session() as session:
             user = session.query(User).filter(User.handle == handle).one_or_none()
             if user is None:
+                if len(codeforces_api.get_users_info([handle])) == 0:
+                    return None
+
                 session.add(
                     User(handle=handle, user_type=user_type, rank=Rank.NOT_RANKED)
                 )
+                return True
 
-    def add_or_update_problemset(
-        self,
-        problemset,
-        problems,
-        session
-    ):
+    def add_or_update_problemset(self, problemset, problems, session):
         valid_problems = []
         session.add(problemset)
         session.commit()
 
-        problemset = session.query(Problemset).filter(Problemset.id == problemset.id).one()
+        problemset = (
+            session.query(Problemset).filter(Problemset.id == problemset.id).one()
+        )
 
         for (contest_id, problem_index) in problems:
             q = session.query(Problem).filter(
