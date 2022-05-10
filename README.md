@@ -1,4 +1,6 @@
-# task8
+# Codeforces Problemsets Manager
+
+Web-application 
 
 ### Description:
     ...

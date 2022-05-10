@@ -14,12 +14,11 @@ def update_users_info():
         d_users: typing.Dict[str, models.User] = {}
 
         for user in users:
-            handles.append(user.handle)
-            d_users[user.handle] = user
+            handles.append(str(user.handle))
+            d_users[str(user.handle)] = user
 
         for user_info in codeforces_api.get_users_info(handles):
             handle = user_info['handle']
-
             rank = user_info.get('rank', '')
             d_users[handle].rank = models.Rank.from_str(rank)
 

@@ -40,4 +40,4 @@ ci:	lint test ## Lint code then run tests
 
 .PHONY: up
 up: ## Run application
-	FLASK_APP=./app/app.py  $(VENV)/bin/flask run  --host='0.0.0.0' -p $(PORT) --reload
+	FLASK_APP=./app/app.py poetry run flask run  --host='0.0.0.0' -p $(PORT) --reload
