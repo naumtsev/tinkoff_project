@@ -105,7 +105,7 @@ app
 ├── utils.py            # вспомогательные функции
 └── workers.py          # scheduler / workers, обновляющие актуальные данные с codeforces
 ```
-Зависимости:
+## Зависимости:
 ```python
 [tool.poetry.dependencies]
 [tool.poetry.dependencies]
@@ -131,3 +131,6 @@ pylint = "^2.12.1"
 mypy = "^0.940"
 pytest-deadfixtures = "^2.2.1"
 ```
+
+## Демонстрация работы:
+![requests](./presentation/test.gif)
