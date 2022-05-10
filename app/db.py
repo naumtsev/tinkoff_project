@@ -39,37 +39,35 @@ class DB:
                     User(handle=handle, user_type=user_type, rank=Rank.NOT_RANKED)
                 )
 
-    def add_problemset(
+    def add_or_update_problemset(
         self,
-        title: str,
-        description: str,
-        problems: typing.List[typing.Tuple[str, str]],
-        image_base64: str,
+        problemset,
+        problems,
+        session
     ):
         valid_problems = []
+        session.add(problemset)
+        session.commit()
 
-        with self.create_session() as session:
-            problem_set = Problemset(
-                title=title, description=description, image=image_base64
-            )
-            session.add(problem_set)
-            for (contest_id, problem_index) in problems:
-                q = session.query(Problem).filter(
-                    and_(
-                        Problem.problem_index == problem_index,
-                        Problem.contest_id == contest_id,
-                    )
+        problemset = session.query(Problemset).filter(Problemset.id == problemset.id).one()
+
+        for (contest_id, problem_index) in problems:
+            q = session.query(Problem).filter(
+                and_(
+                    Problem.problem_index == problem_index,
+                    Problem.contest_id == contest_id,
                 )
+            )
 
-                problem = q.one_or_none()
+            problem = q.one_or_none()
 
-                if problem is None:
-                    self.add_problems_from_contest(contest_id, session)
+            if problem is None:
+                self.add_problems_from_contest(contest_id, session)
 
-                problem = q.one_or_none()
-                if problem is not None:
-                    valid_problems.append((contest_id, problem_index))
-                    problem_set.problems.append(problem)
+            problem = q.one_or_none()
+            if problem is not None:
+                valid_problems.append((contest_id, problem_index))
+                problemset.problems.append(problem)
         return valid_problems
 
     def add_problems_from_contest(self, contest_id, session):

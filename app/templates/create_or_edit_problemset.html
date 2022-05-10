@@ -6,24 +6,29 @@
   <link rel="icon" href="data:;base64,=">
 </head>
 <body>
+   <a href="/">< BACK</a>
+    <br/>
+    <br/>
       <div class="container" style="display: flex; flex-flow: row;">
           <div class="container" style="width: 25%;">
                 <div style="display: flex; justify-content: center; flex-flow: column;">
                     <div style="border: 1px solid black;"  >
-                       <form method='POST' action='/create-problemset' style="padding: 5px;" enctype="multipart/form-data">
+                       <form method='POST' action='/problemset{{"/" + form.id if form.id}}' style="padding: 5px;" enctype="multipart/form-data">
                            <h3>Create problemset</h3>
                            Title: <br/>
-                           <input type="text" name="title" size="50" required>
+                           <input type="text" name="title" size="50" value="{{form.title}}" required>
                            <br/>
                            Description: <br/>
-                           <input type="text" name="description" size="50" value="">
+                           <input type="text" name="description" size="50" value="{{form.description}}">
                            <br/>
-                           Image: <br/>
-                           <input type="file" name="image" accept="image/png, image/jpeg" required>
-                           <br/>
+                           {% if not form.id %}
+                               Image: <br/>
+                               <input type="file" name="image" accept="image/png, image/jpeg" required>
+                                <br/>
+                           {% endif %}
                            Problems (format: "132A 423E"):
                            <br/>
-                           <input type="text" size="50" name="problems" pattern="^\s*([0-9]+[A-Z]+)(\s+[0-9]+[A-Z]+)*\s*$" />
+                           <input type="text" size="50" name="problems" pattern="^\s*([0-9]+[A-Z]+)(\s+[0-9]+[A-Z]+)*\s*$" value="{{form.problems_str}}" />
                            <br/>
                            <br/>
                            <button type="submit"> Submit </button>

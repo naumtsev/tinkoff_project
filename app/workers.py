@@ -82,7 +82,11 @@ class UsersSubmissionsUpdater:
         executors = ThreadPoolExecutor(max_workers=3)
         handles = []
         with self._db.create_session() as session:
-            users = session.query(models.User).all()
+            users = (
+                session.query(models.User)
+                .filter(models.User.user_type == models.UserType.PARTICIPANT)
+                .all()
+            )
             for user in users:
                 handles.append(user.handle)
 

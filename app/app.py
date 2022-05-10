@@ -1,7 +1,7 @@
 import base64
 import typing
 
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request, session, url_for
 
 from app import config, models, workers
 from app.db import db
@@ -18,10 +18,15 @@ info_updater.start()
 
 @app.route('/', methods=['GET'])
 def index() -> typing.Any:
-    with db.create_session() as session:
-        problemsets = session.query(models.Problemset).all()
-        session.expunge_all()
-        return render_template('problemsets.html', problemsets=problemsets)
+    message = session.get('message', '')
+    session['message'] = ''
+
+    with db.create_session() as db_session:
+        problemsets = db_session.query(models.Problemset).all()
+        db_session.expunge_all()
+        return render_template(
+            'problemsets.html', problemsets=problemsets, message=message
+        )
 
 
 @app.route('/add/<user>', methods=['GET'])
@@ -35,19 +40,90 @@ def users_get() -> typing.Any:
     with db.create_session() as session:
         users = session.query(models.User).all()
         session.expunge_all()
-        return render_template('users.html', users=users)
+        users_rows = []
+
+        class UserRow:
+            def __init__(
+                self, handle: str, handle_color: str, user_type: models.UserType
+            ):
+                self.handle = handle
+                self.handle_color = handle_color
+                self.user_type = user_type
+
+        for user in users:
+            users_rows.append(
+                UserRow(user.handle, models.get_rank_color(user.rank), user.user_type)
+            )
+        return render_template('users.html', users=users_rows, UserType=models.UserType)
 
 
-@app.route('/create-problemset', methods=['GET', 'POST'])
-def create_problemset():
+@app.route('/change_user_type/<handle>', methods=['POST'])
+def change_user_type_post(handle) -> typing.Any:
+    with db.create_session() as db_session:
+        user = (
+            db_session.query(models.User)
+            .filter(models.User.handle == handle)
+            .one_or_none()
+        )
+        if user is None:
+            session['message'] = 'User is not registered'
+            return redirect(url_for('index'))
+
+        new_user_type = int(
+            request.form.get('user_type', models.UserType.PARTICIPANT.value)
+        )
+        user.user_type = models.UserType(new_user_type)
+        db_session.merge(user)
+        return redirect('/users')
+
+
+@app.route('/add-user', methods=['POST'])
+def add_user_post() -> typing.Any:
+    handle = request.form['handle']
+    db.add_user(handle)
+    return redirect('/users')
+
+
+@app.route('/problemset', methods=['GET', 'POST'])
+@app.route('/problemset/<int:problemset_id>', methods=['GET', 'POST'])
+def problemset_handler(problemset_id: int = None):
     if request.method == 'GET':
-        return render_template('create_problemset.html')
+        class ProblemsetForm:
+            def __init__(self):
+                self.id = ''
+                self.title = ''
+                self.description = ''
+                self.problems_str = ''
+
+        form = ProblemsetForm()
+
+        if problemset_id is not None:
+            with db.create_session() as db_session:
+                problemset = (
+                    db_session.query(models.Problemset)
+                    .filter(models.Problemset.id == problemset_id)
+                    .one_or_none()
+                )
+                if problemset:
+                    form.id = str(problemset.id)
+                    form.title = problemset.title
+                    form.description = problemset.description
+                    form.problems_str = ' '.join(
+                        list(
+                            map(
+                                lambda x: x.contest_id + x.problem_index,
+                                problemset.problems,
+                            )
+                        )
+                    )
+                else:
+                    session['message'] = 'Invalid problemset id'
+                    return redirect('/')
+        return render_template('create_or_edit_problemset.html', form=form)
     elif request.method == 'POST':
         title = request.form.get('title')
         description = request.form.get('description')
         problems_strs = request.form.get('problems').split()
-        image = request.files['image']
-        image_base64 = str(base64.b64encode(image.stream.read()).decode())
 
         problems = []
         used_problems = {}
@@ -66,11 +142,28 @@ def create_problemset():
                 problems.append((contest_id, problem_index))
                 used_problems[(contest_id, problem_index)] = True
 
-        valid_problems = db.add_problemset(title, description, problems, image_base64)
-        return str(valid_problems)
+        problemset = models.Problemset(title=title, description=description)
+
+        with db.create_session() as db_session:
+            if problemset_id is None:
+                image = request.files['image']
+                image_base64 = str(base64.b64encode(image.stream.read()).decode())
+                problemset.image = image_base64
+            else:
+                    problemset = (
+                        db_session.query(models.Problemset)
+                            .filter(models.Problemset.id == problemset_id)
+                            .one_or_none()
+                    )
+                    problemset.title = title
+                    problemset.description = description
+                    problemset.problems.clear()
+
+            valid_problems = db.add_or_update_problemset(problemset, problems, db_session)
+            return str(valid_problems)
 
 
-@app.route('/problemset/<int:problemset_id>', methods=['GET'])
+@app.route('/problemset/<int:problemset_id>/standings', methods=['GET'])
 def problemset_get(problemset_id):
     with db.create_session() as session:
         problemset = (
@@ -130,12 +223,14 @@ def problemset_get(problemset_id):
 
 
 @app.route('/update_users_submissions', methods=['GET'])
-def update_subs() -> typing.Any:
+def update_users_submissions() -> typing.Any:
     workers.UsersSubmissionsUpdater().update_users_submissions()
-    return
+    session['message'] = 'Users submissions updated'
+    return redirect(url_for('index'))
 
 
 @app.route('/update_users_info', methods=['GET'])
 def update_users_info() -> typing.Any:
     workers.UsersInfoUpdater().update_users_info()
-    return 'OK'
+    session['message'] = 'Users info updated'
+    return redirect(url_for('index'))

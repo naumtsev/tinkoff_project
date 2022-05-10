@@ -4,18 +4,58 @@
       <meta charset="utf-8" />
       <title>Users</title>
       <link rel="icon" href="data:;base64,=">
+
+       <style>
+       a {
+        text-decoration: none;
+       }
+       a:hover {
+        text-decoration: underline;
+       }
+
+        th {
+           border: 1px solid grey;
+           padding: 5px;
+        }
+        td {
+           border: 1px solid grey;
+        }
+       </style>
    </head>
    <body>
-
-   <div class="container" style="display: flex; flex-flow: row;">
+   <a href="/">< BACK</a>
+   <br/>
+   <br/>
+    <div class="container" style="display: flex; flex-flow: row;">
           <div class="container" style="width: 40%;">
-                <div style="display: flex; justify-content: center; flex-flow: column;">
-                    <div style="display: flex; justify-content: start; flex-flow: row wrap;" >
+                    <b>Add new user:</b>
+                    <form method='POST' action='/add-user'>
+                           <input type="text" value="" name="handle" placeholder="handle"/>
+                           <button type="submit"> Add </button>
+                     </form>
+                    <br/>
+                    <b> Users:</b>
+                    <br/>
+                    <table>
                         {% for user in users %}
-                            {{user.handle}} : {{user.rank}}
+                        <tr>
+                            <th>
+                                <a href="https://codeforces.com/profile/{{user.handle}}" style="color: {{user.handle_color}};">{{user.handle}} </a>
+                            </th>
+                            <th>
+                                <form method='POST' action='/change_user_type/{{user.handle}}'>
+                                    <select name="user_type">
+                                      <option value="{{UserType.PARTICIPANT.value}}" {{"selected" if user.user_type == UserType.PARTICIPANT}}>PARTICIPANT</option>
+                                      <option value="{{UserType.SPECTATOR.value}}" {{"selected" if user.user_type == UserType.SPECTATOR}}>SPECTATOR</option>
+                                    </select>
+
+                                   <button type="submit"> Save </button>
+                                 </form>
+                            </th>
+                        </tr>
+
                         {% endfor %}
-                    </div>
-                </div>
+                </table>
           </div>
     </div>
    </body>
