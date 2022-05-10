@@ -29,7 +29,7 @@ WORKDIR /opt/app
 COPY poetry.lock poetry.lock
 COPY pyproject.toml pyproject.toml
 
-RUN poetry install $(if test "$ENVIRONMENT" = production; then echo "--no-dev"; fi)
+RUN poetry install $(if test "$ENVIRONMENT" = production; then echo "--no-dev"; fi) --no-root
 
 COPY app app
 COPY Makefile Makefile

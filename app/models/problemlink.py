@@ -8,4 +8,3 @@ class Problemlink(Base):
     id = sa.Column(sa.Integer, primary_key=True)
     problem_id = sa.Column(sa.Integer, sa.ForeignKey('problems.id'))
     problemset_id = sa.Column(sa.Integer, sa.ForeignKey('problemsets.id'))
-    problem_position = sa.Column(sa.Integer, default=0)
