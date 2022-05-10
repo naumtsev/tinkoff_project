@@ -1,10 +1,11 @@
+import io
 import json
+import time
 
-from app import config, models, workers
+from app import config, models, utils, workers
 from app.app import app
 from app.db import db
-import io
-from app import utils
+
 
 def test_one_big_test(requests_mock):
     handle = 'Naumtsev'
@@ -29,7 +30,11 @@ def test_one_big_test(requests_mock):
             },
         )
 
-        test_client.post('/add-user', data={'handle': handle}, content_type="application/x-www-form-urlencoded")
+        test_client.post(
+            '/add-user',
+            data={'handle': handle},
+            content_type='application/x-www-form-urlencoded',
+        )
         with db.create_session() as session:
             user = (
                 session.query(models.User)
@@ -40,7 +45,7 @@ def test_one_big_test(requests_mock):
             assert user.handle == handle
 
         workers.update_users_info()
-        test_client.get(f'/update_users_info')
+        test_client.get('/update_users_info')
 
         with db.create_session() as session:
             user = (
@@ -58,11 +63,11 @@ def test_one_big_test(requests_mock):
             )
             requests_mock.get(url_user_submissions, json=data)
 
-        test_client.get(f'/update_users_submissions')
+        test_client.get('/update_users_submissions')
         requests_mock.get(url_user_submissions, json=data)
 
         workers.update_users_submissions()
-
+        time.sleep(1)  # workers are multithreading
         with db.create_session() as session:
             user = (
                 session.query(models.User)
@@ -93,10 +98,10 @@ def test_one_big_test(requests_mock):
             data={
                 'title': 'test #1',
                 'description': 'test description',
-                'image': (io.BytesIO(b""), 'img.jpg'),
+                'image': (io.BytesIO(b''), 'img.jpg'),
                 'problems': '1656A 1656B 1656C',
             },
-            content_type='multipart/form-data'
+            content_type='multipart/form-data',
         )
 
         problemset_id = None
@@ -116,7 +121,7 @@ def test_one_big_test(requests_mock):
                 'description': 'test description #2',
                 'problems': '1656A 1656C',
             },
-            content_type='multipart/form-data'
+            content_type='multipart/form-data',
         )
 
         with db.create_session() as session:
@@ -132,12 +137,14 @@ def test_one_big_test(requests_mock):
 
         test_client.get(f'/problemset/{problemset_id}/standings')
         test_client.get(f'/problemset/{problemset_id}/standings')
-        test_client.get(f'/problemset')
+        test_client.get('/problemset')
         test_client.get(f'/problemset/{problemset_id}')
-        test_client.get(f'/users')
+        test_client.get('/users')
 
-
-        test_client.post(f'/change_user_type/{handle}', data={'user_type': models.UserType.SPECTATOR.value})
+        test_client.post(
+            f'/change_user_type/{handle}',
+            data={'user_type': models.UserType.SPECTATOR.value},
+        )
 
     with db.create_session() as session:
         user = db.get_user_by_handle(handle, session)
