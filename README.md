@@ -34,8 +34,28 @@
         author_handle     # хэндл автора посылки
         verdict           # Вердикт OK/FAILED 
         creation_time     # Время отправки решения 
-        contest_id, 
+        contest_id 
         problem_index     # Идентификатор задачи посылки  
+
+### Существующие ручки:
+Главная страница: **'/', methods=['GET']**  
+![requests](./presentation/problemsets.jpg)
+Таблица с пользователями: **'/users', methods=['GET']**    
+Обработка добавления пользователя: **'/add-user', methods=['POST']**  
+Обработка типа пользователя: **'/change_user_type/<handle>', methods=['POST']**
+![requests](./presentation/users.jpg)
+
+Страница создания подборки задач: **'/problemset', methods=['GET']**  
+Страница редактирования подборки задач: **'/problemset/<int:problemset_id>', methods=['GET']**  
+Обработка запросов:  
+**'/problemset', methods=['POST']**  
+**'/problemset/<int:problemset_id>', methods=['POST']**  
+![requests](./presentation/create_problemset.jpg)
+
+
+**'/problemset/<int:problemset_id>/standings', methods=['GET']**    
+![requests](./presentation/standings.jpg)
+
 
 ### Создание окружения:
     make venv
