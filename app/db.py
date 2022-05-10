@@ -92,7 +92,6 @@ class DB:
         return valid_problems
 
     def add_problems_from_contest(self, contest_id: str, session: typing.Any) -> None:
-        print('123123123213123123')
         problems = codeforces_api.get_contest_problems(contest_id)
         for problem in problems:
             title = problem['name']

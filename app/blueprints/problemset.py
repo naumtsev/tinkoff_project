@@ -61,13 +61,15 @@ def create_or_update_problemset_post(
     problemset: models.Problemset = models.Problemset(
         title=title, description=description
     )
-
     with db.create_session() as db_session:
         if problemset_id is None:
+
             status_word = 'created'
             image = request.files['image']
+
             image_base64 = str(base64.b64encode(image.stream.read()).decode())
             problemset.image = image_base64
+
         else:
             problemset_or_none = db.get_problemset(problemset_id, db_session)
 
@@ -81,7 +83,6 @@ def create_or_update_problemset_post(
             problemset.title = title
             problemset.description = description
             problemset.problems.clear()
-
         valid_problems = db.add_or_update_problemset(problemset, problems, db_session)
         session['message'] = f'Problemset is {status_word}. Problems: ' + ', '.join(
             [
