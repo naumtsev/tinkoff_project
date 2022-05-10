@@ -1,9 +1,6 @@
 # Codeforces Problemsets Manager
-
-Web-application 
-
-### Описание:
-    ...
+ 
+Веб-приложение для проведения 
 
 ### Создание окружения:
     make venv
@@ -55,6 +52,7 @@ app
 ```
 Зависимости:
 ```python
+[tool.poetry.dependencies]
 [tool.poetry.dependencies]
 python = "^3.9"
 SQLAlchemy = "^1.4.36"

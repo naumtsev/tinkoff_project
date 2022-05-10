@@ -52,7 +52,7 @@ class DB:
         with self.create_session() as session:
             user = session.query(User).filter(User.handle == handle).one_or_none()
             if user is None:
-                if codeforces_api.get_users_info([handle]):
+                if not codeforces_api.get_users_info([handle]):
                     return False
 
                 session.add(
