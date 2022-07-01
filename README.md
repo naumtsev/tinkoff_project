@@ -109,7 +109,6 @@ app
 ## Зависимости:
 ```python
 [tool.poetry.dependencies]
-[tool.poetry.dependencies]
 python = "^3.9"
 SQLAlchemy = "^1.4.36"
 requests = "^2.27.1"
